@@ -11,11 +11,11 @@ def priority_val(letter):
 
 def find_duplicate(line):
     n=len(line)//2
-    return sum([ priority_val(l) for l in line[:n] if l in line[n:]])
+    return [ priority_val(l) for l in line[:n] if l in line[n:]][0]
 
 if __name__ == "__main__":
-    # f = open("input", "r")
-    f = open("test", "r")
+    f = open("input", "r")
+    # f = open("test", "r")
     score=0
     for line in f:
         score+=find_duplicate(line)
