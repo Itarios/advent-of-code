@@ -4,6 +4,9 @@
 # Deep 2 folders
 */*/
 
+# VSCode Files
+.vstags
+
 # Package Files #
 *.jar
 *.war
