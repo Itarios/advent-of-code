@@ -1,29 +1,34 @@
 # A for Rock, B for Paper, and C for Scissors
-# X for Rock, Y for Paper, and Z for Scissors
+# X for Lose Y for Draw, and Z for Win
 
+def shift_list(l):
+    l.append(l.pop(0))
 
+Val1={"A":0, "B":1,"C":2}
 
-Val={"X":1, "Y":2,"Z":3}
+Val2={"X":0, "Y":1,"Z":2}
 
-Loss={"A":"Z","B":"X","C":"Y"}
+Draw={"A":"A","B":"B","C":"C"}
+Win={"A":"B","B":"C","C":"A"}
+Loss={"A":"C","B":"A","C":"B"}
 
-Draw={"A":"X","B":"Y","C":"Z"}
+Strat=[Loss,Draw,Win]
 
-def game_score(p1,p2):
-    if p1 not in Loss.keys() or p2 not in Val.keys():
+def game_score(v1,v2):
+    if v1 not in Val1.keys() or v2 not in Val2.keys():
         raise ValueError
-    res=Val[p2]
-    if(Loss[p1]==p2):
-        return res
-    if(Draw[p1]==p2):
-        return res+3
-    return res+6
+    print(v1,v2)
 
+    print(Val2[v2])
+
+    print(Strat[Val2[v2]], v1)
+
+    return Val1[ Strat[Val2[v2]][v1] ] + Val2[v2]*3
 
 
 if __name__ == "__main__":
-    f = open("input", "r")
-    # f = open("test", "r")
+    # f = open("input", "r")
+    f = open("test", "r")
     score=0
     for line in f:
         p=line.split()
