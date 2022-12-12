@@ -37,12 +37,19 @@ def initial_state_test():
 
     return stack_crates
 
-def crate_instruction(stacks, n, stack1, stack2):
+def crate_9000_instruction(stacks, n, stack1, stack2):
     stack1-=1
     stack2-=1
 
     for i in range(n):
         stacks[stack2].append( stacks[stack1].pop() )
+
+def crate_9001_instruction(stacks, n, stack1, stack2):
+    stack1-=1
+    stack2-=1
+
+    stacks[stack2].extend( stacks[stack1][-n:] )
+    del stacks[stack1][-n:]
 
 def skip_lines(f,n):
     for i in range(n):
@@ -63,7 +70,8 @@ if __name__ == "__main__":
 
     for line in f:
         instruction=[int(i) for i in findall(r'\d+',line)]
-        crate_instruction(stacks,*instruction)
+        # crate_9000_instruction(stacks,*instruction)
+        crate_9001_instruction(stacks,*instruction)
     
     for stack in stacks:
         result+=stack[-1]
