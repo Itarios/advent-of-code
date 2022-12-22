@@ -45,10 +45,23 @@ class Santa_Directory(Santa_File):
                 file.print_directory(indentation)
                 continue
             print(tab*indentation,file)
+    
+    def find_dir_to_delete(self,current,space_needed=30_000_000):
+        if(self.size<space_needed):
+            return current
+        current=min(self.size,current)
+
+        for file in self.contents.values():
+            if(file.type=="dir"):
+                current=file.find_dir_to_delete(current,space_needed)
+        return current
+                
+                
+        
 
 if __name__ == "__main__":
-    # f = open("input", "r")
-    f = open("test", "r")
+    f = open("input", "r")
+    # f = open("test", "r")
 
     ls="ls"
     cd="cd"
@@ -59,8 +72,9 @@ if __name__ == "__main__":
     line=f.readline().split()
     root_directory=Santa_Directory(line[2],None)
     current_directory=root_directory
+    
     result=0
-    temp=0
+    memory=0
 
     for line in f:
         info, *command , name=line.split()
@@ -70,25 +84,29 @@ if __name__ == "__main__":
             current_directory.add_file( Santa_Directory(name,current_directory) )
             continue
         if(info.isnumeric()):
-            temp+=int(info)
+            memory=int(info)
             current_directory.add_file( Santa_File(name,int(info)) )
             continue
         if( cd in command ):
             if( name==up ):
-                if(current_directory.size<100_000):
-                    result+=current_directory.size
+                # if(current_directory.size<100_000):
+                #     result+=current_directory.size
                 current_directory=current_directory.move_up()
                 # print(str(current_directory))
                 continue
             current_directory=current_directory.contents[name]
         # if( ls in command ):
         #     print(str(current_directory))
-    
-    current_directory.update_size_parent()
-    if(current_directory.size<100_000):
-        result+=current_directory.size
-
-    root_directory.print_directory()
-    print(result)
-
     f.close()
+
+    current_directory.update_size_parent()
+    # if(current_directory.size<100_000):
+    #     result+=current_directory.size
+
+    # root_directory.print_directory()
+    # print(result)
+    # print(root_directory.size)
+    print(root_directory.find_dir_to_delete(root_directory.size, 30_000_000-(70_000_000 -root_directory.size)))
+
+
+    
