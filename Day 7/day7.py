@@ -5,7 +5,7 @@ class Santa_File:
         self.type=type
     
     def __str__(self) -> str:
-        return f'{self.name} ({self.type}, size={self.size})'
+        return f'{self.name} ({self.type}, size= {self.size})'
 
 class Santa_Directory(Santa_File):
 
@@ -17,7 +17,7 @@ class Santa_Directory(Santa_File):
     def __str__(self) -> str:
         # drop_down='\n\t'.join([str(file) for file in self.contents.values()])
         # return (f'{self.name}({self.type}, size={self.size}):\n\t{drop_down}' )
-        return (f'{self.name}({self.type}, size={self.size}):' )
+        return (f'{self.name}({self.type}, size= {self.size}):' )
 
 
     def add_file(self,file):
@@ -26,8 +26,15 @@ class Santa_Directory(Santa_File):
     
     def move_up(self):
         self.parent.size+=self.size
+        # self.update_size_parent()
         return self.parent
     
+    def update_size_parent(self):
+        if(self.parent==None):
+            return None
+        self.parent.size+=self.size
+        self.parent.update_size_parent()
+
     def print_directory(self,indentation=0):
         # tab="\t"
         tab="  "
@@ -43,7 +50,6 @@ if __name__ == "__main__":
     # f = open("input", "r")
     f = open("test", "r")
 
-    
     ls="ls"
     cd="cd"
     # commands=[ls,cd]
@@ -54,7 +60,7 @@ if __name__ == "__main__":
     root_directory=Santa_Directory(line[2],None)
     current_directory=root_directory
     result=0
-    
+    temp=0
 
     for line in f:
         info, *command , name=line.split()
@@ -64,6 +70,7 @@ if __name__ == "__main__":
             current_directory.add_file( Santa_Directory(name,current_directory) )
             continue
         if(info.isnumeric()):
+            temp+=int(info)
             current_directory.add_file( Santa_File(name,int(info)) )
             continue
         if( cd in command ):
@@ -77,6 +84,9 @@ if __name__ == "__main__":
         # if( ls in command ):
         #     print(str(current_directory))
     
+    current_directory.update_size_parent()
+    if(current_directory.size<100_000):
+        result+=current_directory.size
 
     root_directory.print_directory()
     print(result)
