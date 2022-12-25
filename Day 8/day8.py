@@ -46,7 +46,14 @@ def scenic_score_direction(tree,direction):
     return n
     
 def scenic_score(tree, up, down, left, right):
-    return scenic_score_direction(tree, up)*scenic_score_direction(tree, down)*scenic_score_direction(tree, left)*scenic_score_direction(tree, right)
+    score=scenic_score_direction(tree, up)
+    score*=scenic_score_direction(tree, down)
+    score*=scenic_score_direction(tree, left)
+    score*=scenic_score_direction(tree, right)
+    
+    # print(tree,up,down,left,right, score)
+    
+    return score
 
 def max_scenic_score(forest):
     n=len(forest)
@@ -57,24 +64,26 @@ def max_scenic_score(forest):
 
     for i in range(1,n-1):
         for j in range(1,m-1):
-            up= reversed([row[j] for row in forest[:i]])
-            
             down=[row[j] for row in forest[i+1:]]
-            
-            left=reversed(forest[i][:j])
             
             right=forest[i][j+1:]
 
+            up= [row[j] for row in forest[:i]]
+
+            left=forest[i][:j]
+
+            up.reverse()
+            left.reverse()
+
             max_ss= max( max_ss, scenic_score(forest[i][j],up,down,left,right) )
 
-            
-    return scenic_score
+    return max_ss
 
 
 
 if __name__ == "__main__":
-    # f = open("input", "r")
-    f = open("test", "r")
+    f = open("input", "r")
+    # f = open("test", "r")
     result=0
 
     forest=[]
@@ -83,10 +92,9 @@ if __name__ == "__main__":
         forest.append(list(line)[:-1])
     f.close()
     
-    print(forest)
-    print( len(forest) )
+    # print(forest)
+    # print( len(forest) )
     # print( len(forest[0]) )
-    forest.pop()
       
     
     # result=visible_trees(forest)
